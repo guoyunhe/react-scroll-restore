@@ -1,6 +1,6 @@
 {
   "name": "react-scroll-restore",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A lightweight, framework-agnostic React component for seamless scroll restoration and hash anchor positioning—works with any router.",
   "keywords": [
     "anchor",

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-15
+
 ### Added
 
 - Respect `scroll-margin-top` on the target element and `scroll-padding-top` on the scroll container when scrolling to an anchor, matching native fragment navigation.
@@ -31,5 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Template `MyButton` component and its test.
 
-[Unreleased]: https://github.com/guoyunhe/react-scroll-restore/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/guoyunhe/react-scroll-restore/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/guoyunhe/react-scroll-restore/releases/tag/v0.1.1
 [0.1.0]: https://github.com/guoyunhe/react-scroll-restore/releases/tag/v0.1.0
