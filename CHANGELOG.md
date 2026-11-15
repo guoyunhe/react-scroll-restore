@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Respect `scroll-margin-top` on the target element and `scroll-padding-top` on the scroll container when scrolling to an anchor, matching native fragment navigation.
+
 ## [0.1.0] - 2026-11-15
 
 ### Added

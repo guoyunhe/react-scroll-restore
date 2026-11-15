@@ -156,8 +156,13 @@ function scrollToTop(container: HTMLElement, behavior: ScrollBehavior) {
 }
 
 function scrollToAnchor(container: HTMLElement, anchor: Element, behavior: ScrollBehavior) {
+  const offset = getScrollOffset(container, anchor);
+
   if (isDocumentScroller(container)) {
-    window.scrollTo({ top: anchor.getBoundingClientRect().top + window.scrollY, behavior });
+    window.scrollTo({
+      top: anchor.getBoundingClientRect().top + window.scrollY - offset,
+      behavior,
+    });
     return;
   }
 
@@ -165,7 +170,29 @@ function scrollToAnchor(container: HTMLElement, anchor: Element, behavior: Scrol
     anchor.getBoundingClientRect().top -
     container.getBoundingClientRect().top -
     container.clientTop +
-    container.scrollTop;
+    container.scrollTop -
+    offset;
 
   container.scrollTo({ top, behavior });
+}
+
+/**
+ * Matches native fragment navigation: the target's `scroll-margin-top` and the scroll container's
+ * `scroll-padding-top` keep the anchor clear of sticky headers and fixed toolbars.
+ */
+function getScrollOffset(container: HTMLElement, anchor: Element): number {
+  const scrollContainer = isDocumentScroller(container)
+    ? (document.scrollingElement ?? container)
+    : container;
+  const anchorMarginTop = parseScrollLength(window.getComputedStyle(anchor).scrollMarginTop);
+  const containerPaddingTop = parseScrollLength(
+    window.getComputedStyle(scrollContainer).scrollPaddingTop,
+  );
+
+  return anchorMarginTop + containerPaddingTop;
+}
+
+function parseScrollLength(value: string): number {
+  const length = Number.parseFloat(value);
+  return Number.isFinite(length) ? length : 0;
 }

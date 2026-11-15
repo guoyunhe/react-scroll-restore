@@ -9,6 +9,7 @@ Unlike router-specific solutions (like React Router's `<ScrollRestoration>`), `r
 - **🛡️ Router-Agnostic**: Zero coupling with router libraries. Drop it into any React application.
 - **🔄 Predictable Positioning**: Scrolls to the top on navigation without a hash and to the matching anchor when a hash is present.
 - **⚓ Built-in Hash Navigation**: Handles URL hash fragments (`#target-id`) smoothly, with built-in retry logic for async-rendered content.
+- **📐 Sticky-Header Aware**: Honors the target's `scroll-margin-top` and the scroll container's `scroll-padding-top`, so anchors are not hidden behind fixed headers.
 - **🪶 Lightweight & Modern**: Built with React Hooks, zero heavy dependencies, and optimized for performance.
 
 ## 🤔 Why scroll restoration?
@@ -59,6 +60,8 @@ The scroll container is resolved in this order:
 3. The document scrolling element.
 
 If the hashed element is rendered asynchronously (for example after data loading), `<ScrollRestore />` keeps looking for it for up to 30 animation frames.
+
+Anchor positioning follows native fragment navigation: the target's `scroll-margin-top` and the scroll container's `scroll-padding-top` are subtracted from the scroll position. Set one of them (for example `scroll-margin-top: 5rem` on headings) to keep anchors clear of sticky headers.
 
 ### `getContainer`
 

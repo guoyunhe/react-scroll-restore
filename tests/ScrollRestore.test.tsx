@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { type CSSProperties, useEffect, useLayoutEffect, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 
@@ -6,6 +6,7 @@ import { ScrollRestore, type ScrollRestoreProps } from '../src';
 
 afterEach(() => {
   window.history.replaceState(null, '', window.location.pathname);
+  window.scrollTo(0, 0);
   document.querySelectorAll('[data-test-external]').forEach((node) => node.remove());
 });
 
@@ -36,6 +37,8 @@ interface TestPageProps extends ScrollRestoreProps {
   seedTop: number;
   anchorId?: string;
   lateAnchorDelay?: number;
+  anchorStyle?: CSSProperties;
+  containerStyle?: CSSProperties;
 }
 
 function TestPage({
@@ -43,13 +46,15 @@ function TestPage({
   seedTop,
   anchorId = 'anchor',
   lateAnchorDelay,
+  anchorStyle,
+  containerStyle,
   ...props
 }: TestPageProps) {
   return (
-    <div id={scrollerId} style={{ height: 100, overflowY: 'auto' }}>
+    <div id={scrollerId} style={{ height: 100, overflowY: 'auto', ...containerStyle }}>
       <div style={{ position: 'relative', height: 2000 }}>
         {lateAnchorDelay === undefined ? (
-          <div id={anchorId} style={{ position: 'absolute', top: 800 }} />
+          <div id={anchorId} style={{ position: 'absolute', top: 800, ...anchorStyle }} />
         ) : (
           <DelayedAnchor id={anchorId} delay={lateAnchorDelay} top={800} />
         )}
@@ -74,6 +79,68 @@ test('scrolls to the anchor matching the hash', async () => {
   await render(<TestPage scrollerId='scroller-anchor' seedTop={100} anchorId='anchor-hash' />);
 
   expect(document.getElementById('scroller-anchor')!.scrollTop).toBe(800);
+});
+
+test('respects the anchor scroll-margin-top', async () => {
+  window.history.replaceState(null, '', '#anchor-margin');
+  await render(
+    <TestPage
+      scrollerId='scroller-margin'
+      seedTop={100}
+      anchorId='anchor-margin'
+      anchorStyle={{ scrollMarginTop: 80 }}
+    />,
+  );
+
+  expect(document.getElementById('scroller-margin')!.scrollTop).toBe(720);
+});
+
+test('respects the container scroll-padding-top', async () => {
+  window.history.replaceState(null, '', '#anchor-padding');
+  await render(
+    <TestPage
+      scrollerId='scroller-padding'
+      seedTop={100}
+      anchorId='anchor-padding'
+      containerStyle={{ scrollPaddingTop: 60 }}
+    />,
+  );
+
+  expect(document.getElementById('scroller-padding')!.scrollTop).toBe(740);
+});
+
+test('combines the anchor scroll-margin-top and the container scroll-padding-top', async () => {
+  window.history.replaceState(null, '', '#anchor-offset');
+  await render(
+    <TestPage
+      scrollerId='scroller-offset'
+      seedTop={100}
+      anchorId='anchor-offset'
+      anchorStyle={{ scrollMarginTop: 80 }}
+      containerStyle={{ scrollPaddingTop: 60 }}
+    />,
+  );
+
+  expect(document.getElementById('scroller-offset')!.scrollTop).toBe(660);
+});
+
+test('respects the anchor scroll-margin-top when scrolling the document', async () => {
+  window.history.replaceState(null, '', '#document-anchor');
+  window.scrollTo(0, 0);
+
+  const spacer = document.createElement('div');
+  spacer.dataset.testExternal = '';
+  spacer.style.cssText = 'position: relative; height: 3000px';
+  const anchor = document.createElement('div');
+  anchor.id = 'document-anchor';
+  anchor.style.cssText = 'position: absolute; top: 2000px; scroll-margin-top: 80px';
+  spacer.append(anchor);
+  document.body.append(spacer);
+  const expected = anchor.getBoundingClientRect().top + window.scrollY - 80;
+
+  await render(<ScrollRestore getContainer={() => document.documentElement} />);
+
+  expect(window.scrollY).toBe(expected);
 });
 
 test('scrolls to top when the hash does not match any element', async () => {
