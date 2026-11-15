@@ -2,6 +2,25 @@
   "name": "react-scroll-restore",
   "version": "0.1.0",
   "description": "A lightweight, framework-agnostic React component for seamless scroll restoration and hash anchor positioning—works with any router.",
+  "keywords": [
+    "anchor",
+    "anchor-link",
+    "fragment",
+    "hash",
+    "hash-navigation",
+    "history-api",
+    "react",
+    "react-router",
+    "router",
+    "router-agnostic",
+    "scroll",
+    "scroll-position",
+    "scroll-restoration",
+    "scroll-restore",
+    "scroll-to-top",
+    "tanstack-router",
+    "wouter"
+  ],
   "homepage": "https://github.com/guoyunhe/react-scroll-restore#readme",
   "bugs": {
     "url": "https://github.com/guoyunhe/react-scroll-restore/issues"

@@ -7,9 +7,24 @@ Unlike router-specific solutions (like React Router's `<ScrollRestoration>`), `r
 ## ✨ Features
 
 - **🛡️ Router-Agnostic**: Zero coupling with router libraries. Drop it into any React application.
-- **🔄 Smart Scroll Restoration**: Automatically saves and restores scroll positions on browser back/forward (POP) navigation, while resetting to top on normal pushes.
+- **🔄 Predictable Positioning**: Scrolls to the top on navigation without a hash and to the matching anchor when a hash is present.
 - **⚓ Built-in Hash Navigation**: Handles URL hash fragments (`#target-id`) smoothly, with built-in retry logic for async-rendered content.
 - **🪶 Lightweight & Modern**: Built with React Hooks, zero heavy dependencies, and optimized for performance.
+
+## 🤔 Why scroll restoration?
+
+Client-side routing replaces the content of the page without a full browser navigation. The browser does not know that the "page" changed, so it keeps the scroll offset of the previous route and does not scroll to the new URL's hash. The result is easy to reproduce:
+
+- You scroll to the bottom of a long list, click a link, and the next page opens already scrolled to the bottom instead of the top.
+- You open `/posts#comments` directly and the anchor is ignored, or the page jumps before the target has rendered.
+- Your layout scrolls a container with `overflow: auto` instead of the document, and native anchor navigation scrolls the wrong element or nothing at all.
+
+`react-scroll-restore` handles these cases for you:
+
+- Resets to the top when navigating to a URL without a hash.
+- Scrolls to `#target` when the URL has a hash, retrying while the target is still rendering.
+- Attaches to the nearest scrollable container, or to the element returned by `getContainer`.
+- Listens to the History API and `hashchange`, so it works with Wouter, React Router, TanStack Router, or a custom router.
 
 ## 🚀 Installation
 
