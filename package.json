@@ -30,7 +30,9 @@
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "release": "bumpp",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "docs:dev": "vited dev",
+    "docs:build": "vited build"
   },
   "peerDependencies": {
     "react": "^19.2.0",
@@ -48,6 +50,11 @@
     "typescript": "^7.0.2",
     "vite": "^8.3.4",
     "vitest": "^5.0.5",
-    "vitest-browser-react": "^2.3.0"
+    "vitest-browser-react": "^2.3.0",
+    "@vited/cli": "^0.1.4",
+    "@vited/core": "^0.4.2",
+    "@vited/theme-mantine": "^0.5.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   }
 }
