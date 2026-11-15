@@ -25,10 +25,14 @@ jobs:
       - uses: actions/configure-pages@v5
       - run: pnpm approve-builds @swc/core esbuild
       - run: pnpm install
-      - run: pnpm run docs:build
+      - run: pnpm run build:playground
+        env:
+          PLAYGROUND_BASE: /react-scroll-restore/
+      # GitHub Pages has no SPA rewrites: serve index.html for deep links.
+      - run: cp playground/dist/index.html playground/dist/404.html
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: ./docs_dist
+          path: ./playground/dist
   deploy:
     environment:
       name: github-pages

@@ -1,1 +1,2 @@
-export { MyButton } from './MyButton'
+export { ScrollRestore } from './ScrollRestore';
+export type { ScrollRestoreProps } from './ScrollRestore';

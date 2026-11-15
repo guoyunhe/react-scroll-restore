@@ -1,60 +1,97 @@
 {
-  "name": "react-components-starter",
-  "type": "module",
+  "name": "react-scroll-restore",
   "version": "0.0.0",
-  "description": "A starter for creating a React component library.",
-  "author": "Author Name <author.name@mail.com>",
+  "description": "A lightweight, framework-agnostic React component for seamless scroll restoration and hash anchor positioning—works with any router.",
+  "homepage": "https://github.com/guoyunhe/react-scroll-restore#readme",
+  "bugs": {
+    "url": "https://github.com/guoyunhe/react-scroll-restore/issues"
+  },
   "license": "MIT",
-  "homepage": "https://github.com/author/library#readme",
+  "author": {
+    "name": "Guo Yunhe",
+    "email": "i@guoyunhe.me",
+    "url": "https://guoyunhe.me/"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/author/library.git"
+    "url": "git+https://github.com/guoyunhe/react-scroll-restore.git"
   },
-  "bugs": {
-    "url": "https://github.com/author/library/issues"
-  },
+  "funding": "https://ko-fi.com/guoyunhe",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist"
-  ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "tsdown",
+    "build:playground": "vite build",
     "dev": "tsdown --watch",
-    "play": "vite",
-    "test": "vitest",
-    "typecheck": "tsc --noEmit",
-    "release": "bumpp",
-    "prepublishOnly": "pnpm run build",
+    "docs:build": "vited build",
     "docs:dev": "vited dev",
-    "docs:build": "vited build"
-  },
-  "peerDependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "play": "vite",
+    "prepare": "husky",
+    "prepublishOnly": "pnpm run build",
+    "release": "bumpp",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@guoyunhe/oxfmt-config": "^1.1.0",
     "@tsconfig/strictest": "^2.0.8",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@vited/cli": "^0.1.4",
+    "@vited/core": "^0.4.2",
+    "@vited/theme-mantine": "^0.5.2",
     "@vitejs/plugin-react": "^6.1.2",
     "@vitest/browser-playwright": "^5.0.5",
     "bumpp": "^12.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "oxfmt": "^0.78.0",
+    "oxlint": "^1.93.0",
+    "oxlint-config-recommended": "^1.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "tsdown": "^0.23.1",
     "typescript": "^7.0.2",
     "vite": "^8.3.4",
     "vitest": "^5.0.5",
     "vitest-browser-react": "^2.3.0",
-    "@vited/cli": "^0.1.4",
-    "@vited/core": "^0.4.2",
-    "@vited/theme-mantine": "^0.5.2",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "wouter": "^3.13.0"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts,mts,cts,jsx,tsx,vue}": [
+      "oxfmt --write",
+      "oxlint --fix"
+    ],
+    "*.css": "oxfmt --write",
+    "*.{json,jsonc,scss,less,htm,html,md,mdx,yaml,yml}": "oxfmt --write"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^12.18.0",
+      "onFail": "error"
+    }
+  },
+  "engines": {
+    "node": "^22.0.0 || ^24.0.0 || ^26.0.0 || >=27.0.0"
   }
 }

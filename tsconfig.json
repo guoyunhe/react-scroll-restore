@@ -3,10 +3,7 @@
   "compilerOptions": {
     "target": "esnext",
     "jsx": "react-jsx",
-    "lib": [
-      "es2023",
-      "DOM"
-    ],
+    "lib": ["es2023", "DOM"],
     "moduleDetection": "force",
     "module": "preserve",
     "moduleResolution": "bundler",
@@ -16,10 +13,6 @@
     "emitDeclarationOnly": true,
     "verbatimModuleSyntax": true
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "docs_dist"
-  ]
+  "include": ["src"],
+  "exclude": ["docs_dist"]
 }

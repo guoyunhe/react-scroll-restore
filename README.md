@@ -1,29 +1,91 @@
-# react-components-starter
+# react-scroll-restore
 
-A starter for creating a React component library.
+A lightweight, router-agnostic scroll restoration and hash positioning library for React.
 
-## Development
+Unlike router-specific solutions (like React Router's `<ScrollRestoration>`), `react-scroll-restore` operates purely on the native History API and URL changes. This means it works seamlessly with **any** routing solution—whether you are using **Wouter, React Router, TanStack Router, HashRouter, or even a custom setup**.
 
-- Install dependencies:
+## ✨ Features
 
-```bash
-npm install
-```
+- **🛡️ Router-Agnostic**: Zero coupling with router libraries. Drop it into any React application.
+- **🔄 Smart Scroll Restoration**: Automatically saves and restores scroll positions on browser back/forward (POP) navigation, while resetting to top on normal pushes.
+- **⚓ Built-in Hash Navigation**: Handles URL hash fragments (`#target-id`) smoothly, with built-in retry logic for async-rendered content.
+- **🪶 Lightweight & Modern**: Built with React Hooks, zero heavy dependencies, and optimized for performance.
 
-- Run the playground:
-
-```bash
-npm run play
-```
-
-- Run the unit tests:
+## 🚀 Installation
 
 ```bash
-npm run test
+npm install --save react-scroll-restore
 ```
 
-- Build the library:
+## 📖 Usage
+
+Place `<ScrollRestore />` inside the element you want to scroll. On mount, and on every later navigation (`pushState`, `replaceState`, `popstate`, or `hashchange`), it inspects `window.location.hash` and either scrolls to the matching element or, when there is no hash, back to the top.
+
+```tsx
+import { ScrollRestore } from 'react-scroll-restore';
+
+export function App() {
+  return (
+    <div style={{ height: '100vh', overflowY: 'auto' }}>
+      <ScrollRestore />
+      <main>
+        <h1>Page title</h1>
+        <section id='features'>...</section>
+      </main>
+    </div>
+  );
+}
+```
+
+The scroll container is resolved in this order:
+
+1. The element returned by the `getContainer` prop, when provided.
+2. The nearest scrollable ancestor of `<ScrollRestore />` (a parent whose computed `overflow-y` is `auto`, `scroll`, or `overlay`).
+3. The document scrolling element.
+
+If the hashed element is rendered asynchronously (for example after data loading), `<ScrollRestore />` keeps looking for it for up to 30 animation frames.
+
+### `getContainer`
+
+Use `getContainer` to scroll a specific element instead of relying on the nearest scrollable ancestor:
+
+```tsx
+import { useRef } from 'react';
+import { ScrollRestore } from 'react-scroll-restore';
+
+export function Page() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div ref={containerRef} style={{ height: '100vh', overflowY: 'auto' }}>
+      <ScrollRestore getContainer={() => containerRef.current} />
+      <main>...</main>
+    </div>
+  );
+}
+```
+
+### Props
+
+| Prop           | Type                        | Default  | Description                                                                   |
+| -------------- | --------------------------- | -------- | ----------------------------------------------------------------------------- |
+| `getContainer` | `() => HTMLElement \| null` | —        | Returns the element to scroll. Falls back to the nearest scrollable ancestor. |
+| `behavior`     | `ScrollBehavior`            | `'auto'` | Scroll behavior passed to `scrollTo` (`'auto'` or `'smooth'`).                |
+
+## 🎮 Playground
 
 ```bash
-npm run build
+pnpm play
 ```
+
+The playground uses [Wouter](https://github.com/molefrog/wouter) to cover three scenarios:
+
+- Navigating to a new page without a hash scrolls to the top.
+- Navigating to a new page with a hash (e.g. `/about#about-3`) scrolls to that anchor.
+- Clicking a same-page hash link (e.g. `#home-3`) scrolls to that anchor.
+
+### Deployment
+
+Every push to `main` builds the playground and publishes it to GitHub Pages at <https://guoyunhe.github.io/react-scroll-restore/> via [`.github/workflows/pages.yaml`](.github/workflows/pages.yaml). The build uses `PLAYGROUND_BASE=/react-scroll-restore/`, and `index.html` is copied to `404.html` so client-side routes survive deep links on GitHub Pages.
+
+Enable Pages once in **Settings → Pages → Source: GitHub Actions** before the first deployment.
