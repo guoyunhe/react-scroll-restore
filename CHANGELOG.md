@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-15
+
 ### Added
 
 - `ScrollRestore` component that scrolls to the element matching `window.location.hash` when mounted, or to the top when there is no hash.
@@ -25,4 +27,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Template `MyButton` component and its test.
 
-[Unreleased]: https://github.com/guoyunhe/react-scroll-restore/commits/main
+[Unreleased]: https://github.com/guoyunhe/react-scroll-restore/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/guoyunhe/react-scroll-restore/releases/tag/v0.1.0
