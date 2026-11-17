@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Link, Route, Router, Switch, useLocation } from 'wouter';
 
 import { ScrollRestore } from '../../src';
@@ -6,16 +7,14 @@ const SECTIONS = [1, 2, 3, 4, 5, 6];
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 function Page({ prefix, title }: { prefix: string; title: string }) {
-  const [location] = useLocation();
-
   return (
     <article>
       <h2>{title}</h2>
       <nav style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem 1rem' }}>
         {SECTIONS.map((section) => (
-          <Link key={section} href={`${location}#${prefix}-${section}`}>
+          <a key={section} href={`#${prefix}-${section}`}>
             Same-page #{prefix}-{section}
-          </Link>
+          </a>
         ))}
       </nav>
       {SECTIONS.map((section) => (
@@ -33,11 +32,21 @@ function Page({ prefix, title }: { prefix: string; title: string }) {
   );
 }
 
+function Scroller({ children }: { children: ReactNode }) {
+  const [location] = useLocation();
+
+  return (
+    <div id='scroller' style={{ height: '100vh', overflowY: 'auto' }}>
+      <ScrollRestore key={location} />
+      {children}
+    </div>
+  );
+}
+
 export function App() {
   return (
     <Router base={base}>
-      <div id='scroller' style={{ height: '100vh', overflowY: 'auto' }}>
-        <ScrollRestore />
+      <Scroller>
         <div
           style={{
             height: '100vh',
@@ -69,7 +78,7 @@ export function App() {
             <p>Not found</p>
           </Route>
         </Switch>
-      </div>
+      </Scroller>
     </Router>
   );
 }

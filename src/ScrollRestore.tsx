@@ -15,9 +15,6 @@ export interface ScrollRestoreProps {
 }
 
 const MAX_ANCHOR_ATTEMPTS = 30;
-const NAVIGATION_EVENT = 'react-scroll-restore:navigation';
-
-let historyPatched = false;
 
 export function ScrollRestore({ getContainer, behavior = 'auto' }: ScrollRestoreProps) {
   const markerRef = useRef<HTMLSpanElement>(null);
@@ -25,8 +22,6 @@ export function ScrollRestore({ getContainer, behavior = 'auto' }: ScrollRestore
   const [options] = useState(() => ({ getContainer, behavior }));
 
   useLayoutEffect(() => {
-    patchHistory();
-
     const container =
       options.getContainer?.() ?? findScrollableParent(markerRef.current) ?? getScrollingElement();
 
@@ -36,13 +31,6 @@ export function ScrollRestore({ getContainer, behavior = 'auto' }: ScrollRestore
 
     let attempts = 0;
     let frameId: number | undefined;
-
-    const cancelRetry = () => {
-      if (frameId !== undefined) {
-        cancelAnimationFrame(frameId);
-        frameId = undefined;
-      }
-    };
 
     const restore = () => {
       const hash = window.location.hash;
@@ -62,51 +50,16 @@ export function ScrollRestore({ getContainer, behavior = 'auto' }: ScrollRestore
       scrollToAnchor(container, anchor, options.behavior);
     };
 
-    const handleNavigation = () => {
-      cancelRetry();
-      attempts = 0;
-      restore();
-    };
-
     restore();
 
-    window.addEventListener('hashchange', handleNavigation);
-    window.addEventListener('popstate', handleNavigation);
-    window.addEventListener(NAVIGATION_EVENT, handleNavigation);
-
     return () => {
-      cancelRetry();
-      window.removeEventListener('hashchange', handleNavigation);
-      window.removeEventListener('popstate', handleNavigation);
-      window.removeEventListener(NAVIGATION_EVENT, handleNavigation);
+      if (frameId !== undefined) {
+        cancelAnimationFrame(frameId);
+      }
     };
   }, [options]);
 
   return <span ref={markerRef} aria-hidden='true' style={{ display: 'none' }} />;
-}
-
-/**
- * Emits `NAVIGATION_EVENT` for `pushState`/`replaceState` calls so that router-agnostic navigation
- * can be detected.
- */
-function patchHistory() {
-  if (historyPatched) {
-    return;
-  }
-  historyPatched = true;
-
-  const originalPushState = window.history.pushState.bind(window.history);
-  const originalReplaceState = window.history.replaceState.bind(window.history);
-
-  window.history.pushState = (...args) => {
-    originalPushState(...args);
-    window.dispatchEvent(new Event(NAVIGATION_EVENT));
-  };
-
-  window.history.replaceState = (...args) => {
-    originalReplaceState(...args);
-    window.dispatchEvent(new Event(NAVIGATION_EVENT));
-  };
 }
 
 function findAnchor(hash: string): Element | null {

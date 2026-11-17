@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-17
+
+### Changed
+
+- **Breaking**: `<ScrollRestore />` now restores the scroll position only when it mounts. It no longer patches `history.pushState`/`history.replaceState`, subscribes to `pushState`/`popstate`/`hashchange`, or watches the URL, so remount it per navigation (for example `<ScrollRestore key={location.key} />`) to restore on route changes.
+
+### Removed
+
+- History method monkey patching and the internal navigation event used to detect router navigations.
+
+### Documentation
+
+- Added npm, types, license and GitHub stars badges.
+- Replaced the navigation-listening guidance with a remount-per-navigation example for React Router and Wouter.
+
 ## [0.1.1] - 2026-11-15
 
 ### Added
@@ -33,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Template `MyButton` component and its test.
 
-[Unreleased]: https://github.com/guoyunhe/react-scroll-restore/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/guoyunhe/react-scroll-restore/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/guoyunhe/react-scroll-restore/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/guoyunhe/react-scroll-restore/releases/tag/v0.1.1
 [0.1.0]: https://github.com/guoyunhe/react-scroll-restore/releases/tag/v0.1.0

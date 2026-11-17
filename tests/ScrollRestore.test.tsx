@@ -180,18 +180,13 @@ test('retries until an asynchronously rendered anchor appears', async () => {
   await vi.waitFor(() => expect(scroller.scrollTop).toBe(800));
 });
 
-test('restores scroll position on history navigation after mount', async () => {
+test('leaves the native history methods untouched', async () => {
+  const pushState = window.history.pushState;
+  const replaceState = window.history.replaceState;
+
   window.history.replaceState(null, '', window.location.pathname);
-  await render(
-    <TestPage scrollerId='scroller-navigation' anchorId='navigation-anchor' seedTop={400} />,
-  );
+  await render(<TestPage scrollerId='scroller-history-api' seedTop={0} />);
 
-  const scroller = document.getElementById('scroller-navigation')!;
-  expect(scroller.scrollTop).toBe(0);
-
-  window.history.pushState(null, '', '#navigation-anchor');
-  await vi.waitFor(() => expect(scroller.scrollTop).toBe(800));
-
-  window.history.pushState(null, '', window.location.pathname);
-  await vi.waitFor(() => expect(scroller.scrollTop).toBe(0));
+  expect(window.history.pushState).toBe(pushState);
+  expect(window.history.replaceState).toBe(replaceState);
 });
